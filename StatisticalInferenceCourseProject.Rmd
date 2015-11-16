@@ -1,0 +1,49 @@
+---
+title: "Statistical Inference Course Project - Part 1"
+author: "Gurmeet Singh"
+date: "November 16, 2015"
+output: html_document
+---
+  
+# Simulation to investigate the exponential distribution in R and compare it with the Central Limit Theorem
+
+Here's an example of an exponential distribution simulated in R with n = 1000 and lambda = 0.2.
+```{r, echo=FALSE}
+expdist <- rexp(1000, 0.2)
+hist(expdist,
+     breaks = 20,
+     main = "Exponential distribution rexp(n=1000,lambda=0.2)")
+n <- 10109
+```
+
+  
+
+The following graph is result from simulation of taking means of samples of 10000 exponential distributions each with a size of 40 and lambda = 0.2.
+  
+  
+```{r, echo=FALSE}
+n <- 40
+k <- 10000
+# This is defined per the project requirements
+lambda <- 0.2
+samplemeans <- c()
+for (i in 1:k) {
+  expmean <- mean(rexp(n, lambda))
+  samplemeans <- c(samplemeans, expmean)
+}
+hist(samplemeans,breaks = 40)
+```
+  
+  
+You can see that the mean of the sample mean and the variance of the sample mean are respectively a good approximation of values predicted by the central limit theorem.
+  
+  
+
+```{r, echo=FALSE}
+meanofmeans <- mean(samplemeans)
+sdofmeans <- sd(samplemeans)
+cat("Mean of the n sample means =", meanofmeans ,"\n")
+cat("Expected Mean of the n sample means (1/lambda) =", 1/lambda ,"\n")
+cat("Standard Deviation of the n sample means =", sdofmeans,"\n")
+cat("Expected Standard Deviation of the n sample means (1/lambda)/sqrt(n) = ", (1/lambda)/sqrt(n),"\n")
+```
