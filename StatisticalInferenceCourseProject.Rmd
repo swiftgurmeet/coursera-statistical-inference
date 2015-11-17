@@ -2,15 +2,15 @@
 title: "Central limit theorem simulation using exponentially distributed samples"
 author: "Gurmeet Singh"
 date: "November 16, 2015"
-output: html_document
+output: pdf_document
 ---
   
-### Overview
+## Overview
 This report describes a simulation to obtain sample sets from an exponential distribution using R and compare the distribution of the sample means with what is predicted by the Central Limit Theorem.
 
-The content of this report is authored in RStudio using R Markdown format and converted to PDF format using the **knitr** package. The R code used for the report can be found in the appendix. 
+The content of this report is authored in RStudio using R Markdown format and converted to PDF format using the **knitr** package. The R code used for the report can be found in the appendix and the R Markdown file itself can be found on [GitHub](https://github.com/swiftgurmeet/coursera-statistical-inference-course-project/raw/master/StatisticalInferenceCourseProject.Rmd)
 
-### Exponential Distribution
+## Exponential Distribution
 The exponential distribution is defined by its cumulative distribution function
 
 $$ F(x) = 1-e^{-\lambda x} $$
@@ -20,10 +20,7 @@ distribution.
 ```
 rexp(n=10, rate=0.2)
 ```
-produces 10 exponentially-distributed numbers with rate ($\lambda$) of 0.2.  If
-the second argument is omitted, the default rate is 1; this is the ``standard
-exponential distribution''. Here's an example of a histogram showing data from an exponential distribution with n = 1000 and $\lambda$ = 0.2. 
-  
+produces 10 exponentially-distributed numbers with rate ($\lambda$) of 0.2. Shown below is an example of a histogram showing data from an exponential distribution with n = 1000 and $\lambda$ = 0.2.  
 
 ```{r ref.label="exp_example", echo = FALSE}
 ```
@@ -32,7 +29,7 @@ The red vertical line indicates the mean of the generated samples.
 
 ## The simulation
   
-The simulation is done by:
+The simulation is done with these steps:
 
 1.  Get a large number n of set of data, each of size 40, that is exponentially distributed.
 1.  Compute the mean of all these distributions resulting in another n means of 40 numbers each
@@ -59,10 +56,10 @@ The following graph is created from the simulation of taking means of samples of
   
 The vertical red line indicates the mean of the sample means. It should be close to the distribution mean of $1/\lambda$, or 5.0 in our example. The blue line attempts to fit an ideal normal distribution to the histogram of the simulated data.
 
-### Conclusion
+## Conclusion
 
 1.  From the graph, it seems clear that the sample means are normally distributed
-2.  Also, the actual mean of the sample means and the actual variance of the sample means are respectively a good approximation of values predicted by the central limit theorem. This is verified in R code.
+2.  Also, the actual mean of the sample means and the actual variance of the sample means are respectively a good approximation of values predicted by the central limit theorem. This is verified by R code.
 
 ```{r ref.label="sim_values", echo = FALSE}
 ```
