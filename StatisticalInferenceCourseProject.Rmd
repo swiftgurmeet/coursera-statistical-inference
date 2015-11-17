@@ -1,13 +1,16 @@
 ---
-title: "Statistical Inference Course Project - Part 1"
+title: "Central limit theorem simulation using exponentially distributed samples"
 author: "Gurmeet Singh"
 date: "November 16, 2015"
 output: html_document
 ---
   
-# Simulation to investigate the exponential distribution in R and compare it with the Central Limit Theorem
+### Simulation to investigate the exponential distribution in R and compare it with the Central Limit Theorem
 
 Here's an example of an exponential distribution simulated in R with n = 1000 and lambda = 0.2.
+  
+  
+  
 ```{r, echo=FALSE}
 expdist <- rexp(1000, 0.2)
 hist(expdist,
