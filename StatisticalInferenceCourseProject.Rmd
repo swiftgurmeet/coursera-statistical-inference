@@ -5,48 +5,110 @@ date: "November 16, 2015"
 output: html_document
 ---
   
-### Simulation to investigate the exponential distribution in R and compare it with the Central Limit Theorem
+### Overview
+This report describes a simulation to obtain sample sets from an exponential distribution using R and compare the distribution of the sample means with what is predicted by the Central Limit Theorem.
 
-Here's an example of an exponential distribution simulated in R with n = 1000 and lambda = 0.2.
+The content of this report is authored in RStudio using R Markdown format and converted to PDF format using the **knitr** package. The R code used for the report can be found in the appendix. 
+
+### Exponential Distribution
+The exponential distribution is defined by its cumulative distribution function
+
+$$ F(x) = 1-e^{-\lambda x} $$
+
+The R function `rexp` generates random variables with an exponential
+distribution. 
+```
+rexp(n=10, rate=0.2)
+```
+produces 10 exponentially-distributed numbers with rate ($\lambda$) of 0.2.  If
+the second argument is omitted, the default rate is 1; this is the ``standard
+exponential distribution''. Here's an example of a histogram showing data from an exponential distribution with n = 1000 and $\lambda$ = 0.2. 
   
-  
-  
-```{r, echo=FALSE}
-expdist <- rexp(1000, 0.2)
-hist(expdist,
-     breaks = 20,
-     main = "Exponential distribution rexp(n=1000,lambda=0.2)")
-n <- 10109
+
+```{r ref.label="exp_example", echo = FALSE}
 ```
 
-  
+The red vertical line indicates the mean of the generated samples.
 
-The following graph is result from simulation of taking means of samples of 10000 exponential distributions each with a size of 40 and lambda = 0.2.
+## The simulation
   
+The simulation is done by:
+
+1.  Get a large number n of set of data, each of size 40, that is exponentially distributed.
+1.  Compute the mean of all these distributions resulting in another n means of 40 numbers each
+1.  This set of n means is a new distribution with its own mean and variance
+1.  The Central Limit Theorem mandates that this new distribution should be similar to a normal distribution 
+1.  Draw a histogram of the sample means to visualize 
+1.  Draw a normal distribution approximating the data in the histogram and verify if the two match.
   
-```{r, echo=FALSE}
-n <- 40
-k <- 10000
-# This is defined per the project requirements
-lambda <- 0.2
-samplemeans <- c()
+The R code chunk to create the relevant data is shown below. See appendix for complete code.
+```{r, eval = FALSE}
+n <- 40; k <- 10000; lambda <- 0.2
+samplemeans <- NULL
 for (i in 1:k) {
   expmean <- mean(rexp(n, lambda))
   samplemeans <- c(samplemeans, expmean)
 }
-hist(samplemeans,breaks = 40)
+```
+
+The following graph is created from the simulation of taking means of samples of 10000 exponential distributions each with a size of 40 and $\lambda$ = 0.2.
+  
+  
+```{r ref.label="clt_sim", echo = FALSE}
 ```
   
-  
-You can see that the mean of the sample mean and the variance of the sample mean are respectively a good approximation of values predicted by the central limit theorem.
-  
-  
+The vertical red line indicates the mean of the sample means. It should be close to the distribution mean of $1/\lambda$, or 5.0 in our example. The blue line attempts to fit an ideal normal distribution to the histogram of the simulated data.
 
-```{r, echo=FALSE}
+### Conclusion
+
+1.  From the graph, it seems clear that the sample means are normally distributed
+2.  Also, the actual mean of the sample means and the actual variance of the sample means are respectively a good approximation of values predicted by the central limit theorem. This is verified in R code.
+
+```{r ref.label="sim_values", echo = FALSE}
+```
+
+\pagebreak
+
+## Appendix
+
+Code to generate an example of an exponential distribution.
+
+```{r exp_example, eval = FALSE}
+expdist <- rexp(1000, 0.2)
+hist(expdist,
+     breaks = 20,
+     main = "Exponential distribution rexp(n=1000,lambda=0.2)")
+abline(v=mean(expdist),col=2,lwd=2)
+```
+
+Code for runnning the simulation and displaying results.
+
+```{r clt_sim, eval = FALSE}
+n <- 40; k <- 10000; lambda <- 0.2
+samplemeans <- NULL
+for (i in 1:k) {
+  expmean <- mean(rexp(n, lambda))
+  samplemeans <- c(samplemeans, expmean)
+}
+histbreaks <- 40
+h <- hist(samplemeans,
+     breaks = histbreaks,
+     main = "Sample Means from an Exponential Distribution")
+abline(v=mean(samplemeans),col=2,lwd=2)
+xfit<-seq(min(samplemeans),max(samplemeans),length=histbreaks*3) 
+yfit<-dnorm(xfit,mean=mean(samplemeans),sd=sd(samplemeans)) 
+yfit <- yfit*diff(h$mids[1:2])*length(samplemeans) 
+lines(xfit, yfit, col="blue", lwd=2)
+```
+
+Code for comparing the theoretical and expected values of mean and variance.
+```{r sim_values, eval = FALSE}
 meanofmeans <- mean(samplemeans)
 sdofmeans <- sd(samplemeans)
-cat("Mean of the n sample means =", meanofmeans ,"\n")
+cat("Computed Mean of the n sample means =", round(meanofmeans,3) ,"\n")
 cat("Expected Mean of the n sample means (1/lambda) =", 1/lambda ,"\n")
-cat("Standard Deviation of the n sample means =", sdofmeans,"\n")
-cat("Expected Standard Deviation of the n sample means (1/lambda)/sqrt(n) = ", (1/lambda)/sqrt(n),"\n")
+cat("Computed Standard Deviation of the n sample means =", round(sdofmeans,3),"\n")
+cat("Expected Standard Deviation of the n sample means (1/lambda)/sqrt(n) = ", round((1/lambda)/sqrt(n),3),"\n")
 ```
+
+
