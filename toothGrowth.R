@@ -3,8 +3,7 @@ data(ToothGrowth)
 coplot(len ~ dose | supp, 
        data = ToothGrowth, 
        panel = panel.smooth,
-       xlab = "ToothGrowth data: length vs dose,
-       given type of supplement",
+       xlab = "ToothGrowth data: length vs dose, given type of supplement",
        type="b",
        pch=20)
 
