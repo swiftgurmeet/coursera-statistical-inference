@@ -56,7 +56,7 @@ The following graph is created from the simulation of taking means of samples of
 ```{r ref.label="clt_sim", echo = FALSE}
 ```
   
-The vertical dashe dred line indicates the mean of the sample means and the $\mu\pm\sigma$ points are marked by dashed green lines. It should be close to the distribution mean of $1/\lambda$, or 5.0 in our example. The blue line attempts to fit an ideal normal distribution to the histogram of the simulated data.
+The vertical dashed red line indicates the mean of the sample means and the $\mu\pm\sigma$ points are marked by dashed green lines. It should be close to the distribution mean of $1/\lambda$, or 5.0 in our example. The blue line attempts to fit an ideal normal distribution to the histogram of the simulated data.
 
 ## Conclusion
 
