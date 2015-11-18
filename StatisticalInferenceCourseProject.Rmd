@@ -8,9 +8,8 @@ output: html_document
 ### Overview
 This report describes a simulation to obtain sample sets from an exponential distribution using R and compare the distribution of the sample means with what is predicted by the Central Limit Theorem.
 
-The content of this report is authored in RStudio using R Markdown format and converted to PDF format using the **knitr** package. The R code used for the report can be found in the appendix. 
 
-### Exponential Distribution
+#### Exponential Distribution
 The exponential distribution is defined by its cumulative distribution function
 
 $$ F(x) = 1-e^{-\lambda x} $$
@@ -57,9 +56,9 @@ The following graph is created from the simulation of taking means of samples of
 ```{r ref.label="clt_sim", echo = FALSE}
 ```
   
-The vertical red line indicates the mean of the sample means. It should be close to the distribution mean of $1/\lambda$, or 5.0 in our example. The blue line attempts to fit an ideal normal distribution to the histogram of the simulated data.
+The vertical dashe dred line indicates the mean of the sample means and the $\mu\pm\sigma$ points are marked by dashed green lines. It should be close to the distribution mean of $1/\lambda$, or 5.0 in our example. The blue line attempts to fit an ideal normal distribution to the histogram of the simulated data.
 
-### Conclusion
+## Conclusion
 
 1.  From the graph, it seems clear that the sample means are normally distributed
 2.  Also, the actual mean of the sample means and the actual variance of the sample means are respectively a good approximation of values predicted by the central limit theorem. This is verified in R code.
@@ -70,6 +69,8 @@ The vertical red line indicates the mean of the sample means. It should be close
 \pagebreak
 
 ## Appendix
+
+The content of this report is authored in RStudio using R Markdown format and converted to PDF format using the **knitr** package. The R Markdown file itself can be found on [GitHub](https://github.com/swiftgurmeet/coursera-statistical-inference-course-project/raw/master/StatisticalInferenceCourseProject.Rmd)
 
 Code to generate an example of an exponential distribution.
 
@@ -94,12 +95,13 @@ histbreaks <- 40
 h <- hist(samplemeans,
      breaks = histbreaks,
      main = "Sample Means from an Exponential Distribution")
-abline(v=mean(samplemeans),col=2,lwd=2)
+abline(v=mean(samplemeans),col=2,lty=2,lwd=2)
 xfit<-seq(min(samplemeans),max(samplemeans),length=histbreaks*3) 
 yfit<-dnorm(xfit,mean=mean(samplemeans),sd=sd(samplemeans)) 
 yfit <- yfit*diff(h$mids[1:2])*length(samplemeans) 
 lines(xfit, yfit, col="blue", lwd=2)
-abline(v=mean(samplemeans)-sd(samplemeans),col=2)
+abline(v=mean(samplemeans)-sd(samplemeans),col=3,lty=2,lwd=2)
+abline(v=mean(samplemeans)+sd(samplemeans),col=3,lty=2,lwd=2)
 ```
 
 Code for comparing the theoretical and expected values of mean and variance.

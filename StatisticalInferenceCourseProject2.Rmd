@@ -6,28 +6,23 @@ output: pdf_document
 ---
   
 ## Overview
-The report investigates the dataset ToothGrowth in R and uses confidence intervals and hypothesis tests to compare affect on tooth growth by dose and type of supplement.
-
-The documentation of the ToothGrowth dataset has this to say:
+The report investigates the dataset ToothGrowth in R and uses confidence intervals and hypothesis tests to compare affect on tooth growth by dose and type of supplement. The documentation of the ToothGrowth dataset has this to say:
 ```
-The Effect of Vitamin C on Tooth Growth in Guinea Pigs
+The Effect of Vitamin C on Tooth Growth in Guinea Pigs  
 
-Description
-The response is the length of odontoblasts (cells responsible for tooth growth) in 60 guinea pigs. 
-Each animal received one of three dose levels of vitamin C (0.5, 1, and 2 mg/day) by one of two 
-delivery methods, (orange juice or ascorbic acid (a form of vitamin C and coded as VC).
+Description: The response is the length of odontoblasts (cells responsible for tooth growth) in 60 
+guinea pigs. Each animal received one of three dose levels of vitamin C (0.5, 1, and 2 mg/day) by 
+one of two delivery methods, (orange juice or ascorbic acid (a form of vitamin C and coded as VC).
 
-Format
-A data frame with 60 observations on 3 variables.
+Format: A data frame with 60 observations on 3 variables.
 [,1]	len	numeric	Tooth length
 [,2]	supp	factor	Supplement type (VC or OJ).
 [,3]	dose	numeric	Dose in milligrams/day
-
 ```
-
 ## Data Exploration
+Let's plot the data using ggplot2:
 
-```{r ref.label="plot_toothgrowth", echo = FALSE}
+```{r ref.label="ggplot_toothgrowth", echo = FALSE}
 ```
 
 A graph is plotted showing the effect of vitamin C supplements on the growth of cells responsible for tooth growth. Without proceeding to any numerical analysis, conclusions can be drawn from it:
@@ -38,7 +33,9 @@ A graph is plotted showing the effect of vitamin C supplements on the growth of 
 
 ## Statistical Analysis
 
-First, let's look at whether vitamin C in higher dosages causes increase in growth (compared to a lower dose) of tooth cells by using output of the T-test:
+### Test 1
+
+First, let's look at whether vitamin C in higher dosages causes increase in growth (compared to a lower dose) of tooth cells by using output of the T-test. Here, the null hypothesis H0: There's no effect of higher dosage.
 
 ```
 t.test(dVC2p0,dVC0p5, var.equal = FALSE)
@@ -52,9 +49,13 @@ dVC0p5 = odontoblast cell lenghts of guinea pigs given lower dose (0.5 mg/day) o
 ```{r ref.label="conf_vc", echo = FALSE}
 ```
 
-The confidence interval {`r conf.int`} is clearly above zero and shows that the mean cell length is much greater with vitamin C in dosage of 2.0 mg/day compared to 0.5mg/day. I've used ```var.equal = FALSE``` since there's nothing to suggest that the variance of the different data are equal since they may have been affected by the supplements differently.
+The confidence interval {`r conf.int.vc.vc`} is clearly above zero and shows that the mean cell length is much greater with vitamin C in dosage of 2.0 mg/day compared to 0.5mg/day. The p value (rounded to 3 digits) of `r p.vc.vc` of shows that the hypothesis H0 has very low probability of being correct, so it is rejected.
 
-Now let's compare the effect of OJ and VC on tooth growth, again using output of this T-test:
+I've used ```var.equal = FALSE``` since there's nothing to suggest that the variance of the different data are equal since they may have been affected by the supplements differently.
+
+### Test 2
+
+Now let's compare the effect of OJ and VC on tooth growth, again using output of this T-test. Here, the null hypothesis H0: There's no effect of using vitamin C as a supplement instead of Orange Juice.
 ```
 t.test(dOJ2p0,dVC2p0, var.equal = FALSE)
 ```
@@ -64,30 +65,35 @@ The T-test output is:
 ```{r ref.label="conf_vc_oj", echo = FALSE}
 ```
 
-The confidence interval {`r conf.int.vc.oj`} contains zero and is nearly symmetric around it. This shows that there's less than 95% confidence that mean cell lengths of either set are higher than the other. In fact, the confidence level is rather low. This is in agreement with what we saw earlier in the exploratory graph.
+The confidence interval {`r conf.int.vc.oj`} contains zero and is nearly symmetric around it. This shows that there's less than 95% confidence that mean cell lengths of either set are significantly different. The p value (rounded to 3 digits) of `r p.vc.oj` of shows that the hypothesis H0 has high probability of being correct, so it is accepted, meaning that the effect of vitamin C is no more than that of orange juice.
+
+### Test 3
+
+Similarly, we can make vitamin C vs Orange Juice comparison at dosage level of 0.5.
+The null hypothesis H0: mean of cell lengths with vitamin C dose of 0.5 mg/day is no larger than mean of cell lengths with orange juice.
+```{r ref.label="conf_vc_oj_0p5", echo = FALSE}
+```
+
+The confidence interval here is {`r conf.int.vc.oj.0p5`} and does not contain zero. This shows that there's more than 95% confidence that mean cell lengths of either set are higher than the other. The p value (rounded to 3 digits) of `r p.vc.oj.0p5` shows that there's a low probability of null hypothesis being true and therefore vitamin C is more effective at increasing the cell legths than orange juice at dosage level 0f 0.5 mg/day.
+
+All this is in agreement with what we saw earlier in the exploratory graph.
 
 ## Conclusions
 
-1.  Increasing the supplement dosage has staistically significant positive effect on the odontoblast cell lengths.
-1.  At lower dosages, OJ is more effective, while at higher dosage of 2.0mg/day, VC and OJ have statistically similar affect on odontoblast cell lengths.
+1.  Increasing the vitamin C  supplement dosage has statistically significant positive effect on the odontoblast cell lengths.
+1.  At lower dosages, orange juice is more effective, while at higher dosage of 2.0mg/day, vitamin C and orange juice have statistically similar effect on odontoblast cell lengths.
 
 \pagebreak
 
 ## Appendix
 
-The content of this report is authored in RStudio using R Markdown format and converted to PDF format using the **knitr** package. The R code used for the report can be found in the appendix and the R Markdown file itself can be found on [GitHub](https://github.com/swiftgurmeet/coursera-statistical-inference-course-project/raw/master/StatisticalInferenceCourseProject2.Rmd)
+The content of this report is authored in RStudio using R Markdown format and converted to PDF format using the **knitr** package. The R Markdown file itself can be found on [GitHub](https://github.com/swiftgurmeet/coursera-statistical-inference-course-project/raw/master/StatisticalInferenceCourseProject2.Rmd)
 
-Code to generate an example of an exponential distribution.
+Plotting code
 
-```{r plot_toothgrowth, eval = FALSE}
+```{r ggplot_toothgrowth, eval = FALSE}
 data(ToothGrowth)
-
-coplot(len ~ dose | supp, 
-       data = ToothGrowth, 
-       panel = panel.smooth,
-       xlab = "ToothGrowth data: length vs dose, given type of supplement",
-       type="b",
-       pch=20)
+library(ggplot2)
 
 dVC0p5 <- ToothGrowth$len[ToothGrowth$supp == "VC" & ToothGrowth$dose == 0.5]
 dVC1p0 <- ToothGrowth$len[ToothGrowth$supp == "VC" & ToothGrowth$dose == 1.0]
@@ -95,19 +101,25 @@ dVC2p0 <- ToothGrowth$len[ToothGrowth$supp == "VC" & ToothGrowth$dose == 2.0]
 dOJ0p5 <- ToothGrowth$len[ToothGrowth$supp == "OJ" & ToothGrowth$dose == 0.5]
 dOJ1p0 <- ToothGrowth$len[ToothGrowth$supp == "OJ" & ToothGrowth$dose == 1.0]
 dOJ2p0 <- ToothGrowth$len[ToothGrowth$supp == "OJ" & ToothGrowth$dose == 2.0]
+
+ggplot(data=ToothGrowth, aes(dose,len),colours=supp) + geom_point(col=4,pch=21) + facet_grid(. ~ supp)
 ```
 
-Code for runnning the simulation and displaying results.
+Code for the T-tests and results' variables.
 
 ```{r conf_vc_oj, eval = FALSE}
 t.test(dOJ2p0,dVC2p0, var.equal = FALSE)
 conf.int.vc.oj <- t.test(dOJ2p0,dVC2p0, var.equal = FALSE)$conf.int
+p.vc.oj <- round(t.test(dOJ2p0,dVC2p0, var.equal = FALSE)$p.value,3)
 ```
 
+```{r conf_vc_oj_0p5, eval = FALSE}
+conf.int.vc.oj.0p5 <- t.test(dOJ0p5,dVC0p5, var.equal = FALSE)$conf.int
+p.vc.oj.0p5 <- round(t.test(dOJ0p5,dVC0p5, var.equal = FALSE)$p.value,3)
+```
 
 ```{r conf_vc, eval = FALSE}
 t.test(dVC2p0,dVC0p5, var.equal = FALSE)
-conf.int <- t.test(dVC2p0,dVC0p5, var.equal = FALSE)$conf.int
+conf.int.vc.vc <- t.test(dVC2p0,dVC0p5, var.equal = FALSE)$conf.int
+p.vc.vc <- round(t.test(dVC2p0,dVC0p5, var.equal = FALSE)$p.value,3)
 ```
-
-
